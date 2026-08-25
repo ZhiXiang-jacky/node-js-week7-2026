@@ -11,3 +11,10 @@
 -- ============================================================
 
 -- 把你的改寫版本撰寫於下方：
+-- 思路：欄位維持「裸露」不套函式，改用「半開區間」框住台北時間一整天，
+--       created_at 就能直接走現有的 idx_bookings_created 索引。
+--       DB 時區為 Asia/Taipei（docker-compose 設定 TZ/PGTZ），故用 +08 邊界。
+SELECT count(*) AS total
+FROM course_bookings
+WHERE created_at >= TIMESTAMPTZ '2026-06-24 00:00:00+08'
+  AND created_at <  TIMESTAMPTZ '2026-06-25 00:00:00+08';
